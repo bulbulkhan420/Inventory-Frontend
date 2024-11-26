@@ -1,21 +1,28 @@
 "use client";
 import React from "react";
 import { FiEdit, MdDelete } from "./icons/icon";
+
 type Props = {
     id: string;
     catagory: string;
     barstatus: string;
     setbarstatus: Function;
+    passingToNavbar: Function;
 };
 
-export default function ({ id, catagory, barstatus, setbarstatus }: Props) {
+export default function ({
+    id,
+    catagory,
+    barstatus,
+    setbarstatus,
+    passingToNavbar,
+}: Props) {
     let editItem = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
         if (barstatus === "ADD") {
             setbarstatus("UPDATE");
-        } else {
-            setbarstatus("ADD");
         }
+        passingToNavbar({ id, catagory });
     };
     return (
         <div>
