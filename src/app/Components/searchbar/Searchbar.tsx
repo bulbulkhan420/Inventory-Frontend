@@ -24,7 +24,6 @@ export default function searchBar({
     actionstate,
     updatestatus,
 }: props) {
-    let [inputValue, setinputValue] = useState("");
     let [check, setcheck] = useState<boolean>(false);
 
     let [buttonOption, setbuttonOption] = useState<string>("");
@@ -70,8 +69,6 @@ export default function searchBar({
                     toast.success("Successfully Added");
                     updatestatus(true);
                     setbuttonOption("ADD");
-                    baroption = "ADD";
-                    actionstate.catagory = "";
                 } else {
                     toast.warn("Catagory Already Exist");
                 }
@@ -96,7 +93,6 @@ export default function searchBar({
                                 required: true,
                                 minLength: 3,
                             })}
-                            defaultValue={actionstate?.catagory}
                         />
                     </div>
                     <div className="col-span-2 h-full w-full flex justify-center items-center ">
@@ -104,7 +100,7 @@ export default function searchBar({
                             type="submit"
                             className="px-3 rounded-md  w-1/2 h-full py-1 gap-x-2 border-1 bg-blue-600 text-white flex justify-around items-center"
                         >
-                            {buttonOption}
+                            ADD
                         </button>
                     </div>
                 </form>

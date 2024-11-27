@@ -4,6 +4,7 @@ import CatagoryCard from "../Components/catagoryCard";
 import Searchbar from "../Components/searchbar/searchBar";
 import { getAllCatagoriesUrl } from "../services/endpoints";
 import { getAllCatagoryListService } from "../services/http-services";
+
 interface IData {
     id: string;
     catagory: string;

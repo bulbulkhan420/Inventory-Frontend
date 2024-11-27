@@ -1,10 +1,12 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { FiEdit, MdDelete } from "./icons/icon";
 
 import { deleteUrl } from "../services/endpoints";
 import { toast } from "react-toastify";
 import { catagoryDeleteService } from "../services/http-services";
+import { CatagoryUpdate } from "./catagoryUpdate";
+
 type Props = {
     id: string;
     catagory: string;
@@ -22,12 +24,21 @@ export default function ({
     passingToNavbar,
     updatestatus,
 }: Props) {
+    let [catagoryId, setcatagoryId] = useState<string>("");
+    let [catagoryName, setcatagoryName] = useState<string>("");
+    let [updateBar, setupdatebar] = useState<boolean>(true);
+    let updateBarfunc = (status: boolean) => {
+        setupdatebar(true);
+    };
     let editItem = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
         if (barstatus === "ADD") {
             setbarstatus("UPDATE");
         }
+        setcatagoryId(id);
+        setcatagoryName(catagory);
         passingToNavbar({ id, catagory });
+        setupdatebar(false);
     };
     let deleteItem = async () => {
         let result = await catagoryDeleteService(`${deleteUrl}/${id}`);
@@ -41,6 +52,14 @@ export default function ({
     };
     return (
         <div>
+            <div className={`${updateBar ? "hidden" : ""}`}>
+                <CatagoryUpdate
+                    catagoryId={catagoryId ? catagoryId : ""}
+                    catagoryName={catagoryName ? catagoryName : ""}
+                    updateBarfunc={updateBarfunc}
+                />
+            </div>
+
             <div className="h-[50px] grid grid-cols-4 my-1 border-b-2 pb-2 ">
                 <div className="col-span-1 text-center flex justify-center items-center">
                     {id}
