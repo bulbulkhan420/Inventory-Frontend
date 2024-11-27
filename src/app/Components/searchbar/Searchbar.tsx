@@ -24,7 +24,7 @@ export default function searchBar({
     actionstate,
     updatestatus,
 }: props) {
-    let [check, setcheck] = useState<boolean>(false);
+   
 
     let [buttonOption, setbuttonOption] = useState<string>("");
     if (baroption !== buttonOption) {

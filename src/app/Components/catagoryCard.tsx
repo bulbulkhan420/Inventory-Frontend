@@ -57,6 +57,7 @@ export default function ({
                     catagoryId={catagoryId ? catagoryId : ""}
                     catagoryName={catagoryName ? catagoryName : ""}
                     updateBarfunc={updateBarfunc}
+                    updatestatus={updatestatus}
                 />
             </div>
 
