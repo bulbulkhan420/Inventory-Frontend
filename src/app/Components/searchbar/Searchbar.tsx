@@ -1,7 +1,13 @@
 "use client";
-import { catagoryUpdate } from "@/app/utils/catagoryUpdateUrl";
-import { rootUrl } from "@/app/utils/endPoint";
-import React, { useState } from "react";
+
+import { catagoryAddUrl, catagoryUpdate } from "../../services/endpoints";
+import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import { useForm, SubmitHandler } from "react-hook-form";
+import {
+    catagoryUpdateService,
+    catagoryAddService,
+} from "@/app/services/http-services";
 interface props {
     baroption: string;
     actionstate: {
@@ -10,54 +16,98 @@ interface props {
     };
     updatestatus: Function;
 }
+type InputCatagory = {
+    catagory: string;
+};
 export default function searchBar({
     baroption,
     actionstate,
     updatestatus,
 }: props) {
-    let [inputValue, setinputValue] = useState<string>("");
-    let setvalue = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setinputValue(e.target.value);
-    };
-    let dataUpdate = async () => {
-        if (baroption === "UPDATE" && actionstate) {
-            let response: any = await fetch(`${rootUrl}${catagoryUpdate}`, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    id: actionstate.id,
-                    catagory: inputValue,
-                }),
-            });
-            if (response.ok) {
-                const result = await response.json();
-                console.log(result);
-                updatestatus(true);
+    let [inputValue, setinputValue] = useState("");
+    let [check, setcheck] = useState<boolean>(false);
+
+    let [buttonOption, setbuttonOption] = useState<string>("");
+    if (baroption !== buttonOption) {
+        setbuttonOption(baroption);
+    }
+
+    const {
+        register,
+        handleSubmit,
+        watch,
+        reset,
+        formState: { errors },
+    } = useForm<InputCatagory>();
+    const dataUpdate: SubmitHandler<InputCatagory> = async (data) => {
+        if (buttonOption === "UPDATE" && actionstate) {
+            try {
+                let result = await catagoryUpdateService(
+                    `${catagoryUpdate}`,
+                    actionstate.id,
+                    data.catagory
+                );
+                if (result.message == "OK") {
+                    toast.success("Successfully Updated");
+                    updatestatus(true);
+
+                    setbuttonOption("ADD");
+                } else {
+                    toast.warn("Catagory already exist");
+                    updatestatus(true);
+                }
+            } catch (error) {
+                toast.error(`${error}`);
+            }
+        } else {
+            let result = await catagoryAddService(
+                `${catagoryAddUrl}`,
+                data.catagory
+            );
+
+            if (result) {
+                if (result.message == "OK") {
+                    toast.success("Successfully Added");
+                    updatestatus(true);
+                    setbuttonOption("ADD");
+                    baroption = "ADD";
+                    actionstate.catagory = "";
+                } else {
+                    toast.warn("Catagory Already Exist");
+                }
+                reset();
             }
         }
     };
+
     return (
         <div>
-            <div className="min-w-[800px] h-[50px] grid grid-cols-6 mt-5 border-2">
-                <div className="h-full w-full col-span-4 flex justify-start items-center ">
-                    <input
-                        className=" w-full h-full border-2 pl-3"
-                        placeholder="Add items"
-                        type="text"
-                        onChange={setvalue}
-                        value={inputValue}
-                    />
-                </div>
-                <div className="col-span-2 h-full w-full flex justify-center items-center ">
-                    <button
-                        onClick={dataUpdate}
-                        className="px-3 w-1/2 h-full py-2 gap-x-2 border-1 bg-blue-600 text-white flex justify-around items-center"
-                    >
-                        {baroption}
-                    </button>
-                </div>
+            <div>
+                <form
+                    onSubmit={handleSubmit(dataUpdate)}
+                    className="min-w-[800px] w-full h-[50px] grid grid-cols-6 mt-1"
+                >
+                    <div className="h-full w-full col-span-4 flex justify-center items-center ml-5 rounded-md ">
+                        <input
+                            className=" w-full h-full border-2 pl-3 rounded-md"
+                            placeholder="Enter the Text"
+                            type="text"
+                            {...register("catagory", {
+                                required: true,
+                                minLength: 3,
+                            })}
+                            defaultValue={actionstate?.catagory}
+                        />
+                    </div>
+                    <div className="col-span-2 h-full w-full flex justify-center items-center ">
+                        <button
+                            type="submit"
+                            className="px-3 rounded-md  w-1/2 h-full py-1 gap-x-2 border-1 bg-blue-600 text-white flex justify-around items-center"
+                        >
+                            {buttonOption}
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     );

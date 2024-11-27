@@ -2,9 +2,8 @@
 import React, { useEffect, useState } from "react";
 import CatagoryCard from "../Components/catagoryCard";
 import Searchbar from "../Components/searchbar/searchBar";
-import { rootUrl } from "../utils/endPoint";
-import { catagoryGet } from "../utils/catagoryGet";
-
+import { getAllCatagoriesUrl } from "../services/endpoints";
+import { getAllCatagoryListService } from "../services/http-services";
 interface IData {
     id: string;
     catagory: string;
@@ -30,35 +29,35 @@ export default function Page() {
             setrefress(!refress);
         }
     };
-    let checkApi = async (api: string): Promise<any> => {
-        console.log(api);
-        let data: any = await fetch(api);
-        let bigdata: any = await data.json();
 
-        return bigdata;
-    };
     useEffect(() => {
-        let info: Promise<any> = checkApi(`${rootUrl}${catagoryGet}`);
+        let info: Promise<any> = getAllCatagoryListService(
+            `${getAllCatagoriesUrl}`
+        );
         info.then((data) => {
             setallData(data);
         });
+        setbarStatus("ADD");
     }, [refress]);
     return (
-        <div className="lg:mx-10 border-2">
+        <div className="lg:mx-10 border-2 min-w-[800px]">
             <div className="w-full min-w-[800px] overflow-x-scroll h-auto">
-                <Searchbar
-                    baroption={barStatus}
-                    actionstate={datastate}
-                    updatestatus={updatestatus}
-                />
-                <div className="h-[50px] grid grid-cols-4 border-2">
-                    <div className="col-span-1 text-center flex justify-center items-center">
+                <div className="w-full min-w-[800px] h-[80px] flex justify-center items-center">
+                    <Searchbar
+                        baroption={barStatus}
+                        actionstate={datastate}
+                        updatestatus={updatestatus}
+                    />
+                </div>
+
+                <div className="h-[50px] grid grid-cols-4 border-t-2 border-b-2">
+                    <div className="col-span-1 font-bold text-center flex justify-center items-center">
                         Id
                     </div>
-                    <div className="col-span-1 text-center flex justify-center items-center">
-                        catagory
+                    <div className="col-span-1 text-center font-bold flex justify-center items-center">
+                        Catagory
                     </div>
-                    <div className="col-span-2 text-center flex justify-center items-center">
+                    <div className="col-span-2 text-center font-bold flex justify-center items-center">
                         Action
                     </div>
                 </div>
@@ -73,6 +72,7 @@ export default function Page() {
                                     barstatus={barStatus}
                                     setbarstatus={setbarStatus}
                                     passingToNavbar={passingToNavbar}
+                                    updatestatus={updatestatus}
                                 />
                             </div>
                         );

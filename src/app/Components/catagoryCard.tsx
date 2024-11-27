@@ -2,12 +2,16 @@
 import React from "react";
 import { FiEdit, MdDelete } from "./icons/icon";
 
+import { deleteUrl } from "../services/endpoints";
+import { toast } from "react-toastify";
+import { catagoryDeleteService } from "../services/http-services";
 type Props = {
     id: string;
     catagory: string;
     barstatus: string;
     setbarstatus: Function;
     passingToNavbar: Function;
+    updatestatus: Function;
 };
 
 export default function ({
@@ -16,6 +20,7 @@ export default function ({
     barstatus,
     setbarstatus,
     passingToNavbar,
+    updatestatus,
 }: Props) {
     let editItem = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
@@ -24,9 +29,19 @@ export default function ({
         }
         passingToNavbar({ id, catagory });
     };
+    let deleteItem = async () => {
+        let result = await catagoryDeleteService(`${deleteUrl}/${id}`);
+
+        if (result.message == "OK") {
+            toast.success("Successfully Deleted");
+            updatestatus(true);
+        } else {
+            toast.warn("Something error to deletion");
+        }
+    };
     return (
         <div>
-            <div className="h-[50px] grid grid-cols-4 ">
+            <div className="h-[50px] grid grid-cols-4 my-1 border-b-2 pb-2 ">
                 <div className="col-span-1 text-center flex justify-center items-center">
                     {id}
                 </div>
@@ -36,11 +51,14 @@ export default function ({
                 <div className="col-span-2 gap-x-3 flex justify-center items-center w-full">
                     <button
                         onClick={editItem}
-                        className="px-3 py-2 gap-x-2 border-2 flex justify-around items-center"
+                        className="px-3 transform duration-700 py-2 gap-x-2 border-2 flex justify-around text-red-900  items-center rounded-lg hover:text-red-400"
                     >
                         <FiEdit /> Edit
                     </button>
-                    <button className="px-3 py-2 gap-x-2 border-2 flex justify-around items-center">
+                    <button
+                        onClick={deleteItem}
+                        className="px-3 transform duration-700 py-2 gap-x-2 border-2 flex justify-around items-center text-red-900 rounded-lg hover:text-red-400"
+                    >
                         <MdDelete /> Delete
                     </button>
                 </div>
