@@ -8,6 +8,7 @@ import "./globals.css";
 // };
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Navbar from "./Components/navBar/navBar";
 export default function RootLayout({
     children,
 }: Readonly<{
@@ -16,6 +17,7 @@ export default function RootLayout({
     return (
         <html lang="en">
             <body>
+                <Navbar />
                 {children}
                 <ToastContainer
                     position="top-center"

@@ -1,3 +1,4 @@
+// Catagory
 let catagoryUpdateService = async (
     api: string,
     id: string,
@@ -66,9 +67,95 @@ let getAllCatagoryListService = async (api: string): Promise<any> => {
 
     return bigdata;
 };
+
+// Company
+type Companylist = {
+    name: string;
+    phone: number;
+    email: string;
+    typeOfCompany: string;
+};
+let addCompanyListService = async (api: string, putData: any): Promise<any> => {
+    try {
+        console.log(putData);
+        let data: any = await fetch(api, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                name: putData.name,
+                phone: putData.phone,
+                email: putData.email,
+                typeOfCompany: putData.typeOfCompany,
+            }),
+        });
+        let Companylist: any = await data.json();
+        return Companylist;
+    } catch (error) {
+        return error;
+    }
+};
+
+let getAllCompanyListService = async (api: string): Promise<any> => {
+    try {
+        let data: any = await fetch(api);
+        let companylist: any = await data.json();
+        return companylist;
+    } catch (error) {
+        return error;
+    }
+};
+
+let updateCompanyService = async (
+    api: string,
+    data: Companylist
+): Promise<any> => {
+    try {
+        try {
+            let response: any = await fetch(api, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    name: data.name,
+                    phone: data.phone,
+                    email: data.email,
+                    typeOfCompany: data.typeOfCompany,
+                }),
+            });
+
+            const result = await response.json();
+            return result;
+        } catch (error) {
+            return error;
+        }
+    } catch (error) {}
+};
+let deleteCompanyService = async (api: string) => {
+    try {
+        let response: any = await fetch(api, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+        if (response.ok) {
+            const result = await response.json();
+            return result;
+        }
+    } catch (error) {
+        return error;
+    }
+};
 export {
     catagoryUpdateService,
     catagoryAddService,
     catagoryDeleteService,
     getAllCatagoryListService,
+    addCompanyListService,
+    getAllCompanyListService,
+    updateCompanyService,
+    deleteCompanyService,
 };

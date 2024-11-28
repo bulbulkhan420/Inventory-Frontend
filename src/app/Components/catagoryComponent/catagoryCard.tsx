@@ -1,10 +1,10 @@
 "use client";
 import React, { useState } from "react";
-import { FiEdit, MdDelete } from "./icons/icon";
+import { FiEdit, MdDelete } from "../icons/icon";
 
-import { deleteUrl } from "../services/endpoints";
+import { deleteUrl } from "../../services/endpoints";
 import { toast } from "react-toastify";
-import { catagoryDeleteService } from "../services/http-services";
+import { catagoryDeleteService } from "../../services/http-services";
 import { CatagoryUpdate } from "./catagoryUpdate";
 
 type Props = {

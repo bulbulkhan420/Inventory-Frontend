@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import CatagoryCard from "../Components/catagoryCard";
+import CatagoryCard from "../Components/catagoryComponent/catagoryCard";
 import Searchbar from "../Components/searchbar/searchBar";
 import { getAllCatagoriesUrl } from "../services/endpoints";
 import { getAllCatagoryListService } from "../services/http-services";
